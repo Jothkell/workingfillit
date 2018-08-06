@@ -6,7 +6,7 @@
 /*   By: jkellehe <jkellehe@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/31 00:18:25 by jkellehe          #+#    #+#             */
-/*   Updated: 2018/08/04 18:00:35 by jkellehe         ###   ########.fr       */
+/*   Updated: 2018/08/05 17:14:38 by jkellehe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,15 +96,15 @@ void			print_res(char **res, t_boards *board)
 	int			j;
 	int			flag;
 
-	flag = 0;
+	flag = 1;
 	i = board->tly;
 	j = board->tlx;
-	while (i <= board->ymax)
+	while (i <= board->ymax || i < (board->size + board->tly))
 	{
 		j = board->tlx;
-		while (j <= board->xmax)
+		while (j <= board->xmax || j < (board->size + board->tlx))
 		{
-			if (res[i][j] >= 'A' && res[i][j] <= 'Z' && (flag = 1))
+			if (res[i][j] >= 'A' && res[i][j] <= 'Z')
 				write(1, &res[i][j], 1);
 			else
 				write(1, ".", 1);

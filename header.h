@@ -6,7 +6,7 @@
 /*   By: dknoll <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/08 17:02:15 by dknoll            #+#    #+#             */
-/*   Updated: 2018/08/04 20:18:36 by jkellehe         ###   ########.fr       */
+/*   Updated: 2018/08/05 16:53:25 by jkellehe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,9 @@ struct				s_boards
 	uint8_t			flag;
 };
 
+int					get_top(uint64_t *value);
+int					haystack(char *haystack, char *needle, int rewind);
+int					valid_pieces(char *buf);
 int					sameas(t_piece *p, t_boards *board);
 int					sub_checker(t_piece *p, t_boards *board);
 void				shifter(t_piece *p, t_boards *board, uint8_t lr);

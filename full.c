@@ -6,7 +6,7 @@
 /*   By: jkellehe <jkellehe@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/04 19:33:33 by jkellehe          #+#    #+#             */
-/*   Updated: 2018/08/04 19:40:44 by jkellehe         ###   ########.fr       */
+/*   Updated: 2018/08/05 16:55:10 by jkellehe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,30 +39,6 @@ char			get_final(t_piece *p, t_boards *board)
 	return (p[i].id);
 }
 
-int				get_top(uint64_t *value)
-{
-	int			i;
-	int			j;
-	uint64_t	holder;
-
-	j = 0;
-	i = 0;
-	while (i < 4)
-	{
-		holder = value[i];
-		j = 0;
-		while (j < 35 && holder)
-		{
-			holder /= 2;
-			j++;
-		}
-		if (holder == 1)
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
 void			switch_em(uint64_t *value)
 {
 	value[0] = value[1];
@@ -82,4 +58,51 @@ void			slider(uint64_t *value)
 	}
 	while (value[0] == 0)
 		switch_em(value);
+}
+
+int				valid_pieces(char *buf)
+{
+	if (haystack(buf, "#...#...#...#", 0) ||
+		haystack(buf, "####", 0) ||
+		haystack(buf, "#...#...##", 0) ||
+		haystack(buf, "##...#...#", 0) ||
+		haystack(buf, "..#.###", 0) ||
+		haystack(buf, "###.#", 0) || haystack(buf, ".#...#..##", 0) ||
+		haystack(buf, "##..#...#", 0) || haystack(buf, "#...###", 0) ||
+		haystack(buf, "###...#", 0) || haystack(buf, "##..##", 0) ||
+		haystack(buf, "###..#", 0) || haystack(buf, ".#..###", 0) ||
+		haystack(buf, "#...##..#", 0) || haystack(buf, ".#..##...#", 0) ||
+		haystack(buf, "##...##", 0) || haystack(buf, ".#..##..#", 0) ||
+		haystack(buf, "##.##", 0) || haystack(buf, "#...##...#", 0))
+		return (1);
+	return (0);
+}
+
+int				haystack(char *haystack, char *needle, int rewind)
+{
+	if (*needle == '\0')
+		return (1);
+	while (*haystack != '\0' && !(rewind = 0))
+	{
+		if (*haystack == '\n')
+			haystack++;
+		if (*haystack == needle[rewind])
+		{
+			while (*haystack == needle[rewind] || *haystack == '\n')
+			{
+				if (*haystack == '\0')
+					return (0);
+				if (*haystack != '\n')
+				{
+					rewind++;
+					if (needle[rewind] == '\0')
+						return (1);
+				}
+				haystack++;
+			}
+			haystack -= rewind;
+		}
+		haystack++;
+	}
+	return (0);
 }

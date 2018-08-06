@@ -6,7 +6,7 @@
 /*   By: jkellehe <jkellehe@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/17 16:38:23 by jkellehe          #+#    #+#             */
-/*   Updated: 2018/08/04 20:18:00 by jkellehe         ###   ########.fr       */
+/*   Updated: 2018/08/05 16:57:26 by jkellehe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,10 @@ int				check_valid(char *buf)
 
 	count = 0;
 	i = 1;
+	if (!(valid_pieces(buf)))
+		return (0);
 	while (i <= 20)
 	{
-		if (!(i % 20) && (*buf != '\n' || (buf[1] != '\n' && buf[1])))
-			return (0);
 		if (((i % 5) && (*buf != '#' && *buf != '.'))
 			|| (!(i % 5) && (*buf != '\n')))
 			return (0);
@@ -71,20 +71,22 @@ int				reader(int fd, t_piece *p)
 	char		buf[22];
 	char		letter;
 	int			i;
+	char		hold;
 
 	i = 0;
 	letter = 'A';
-	while ((bytes = read(fd, buf, 21)))
+	while (20 == (bytes = read(fd, buf, 20)))
 	{
 		if (!(check_valid(buf)))
 			return (0);
 		bitter(buf, p);
 		p->id = letter++;
+		if (!(bytes = read(fd, &hold, 1)))
+			return (1);
 		p += 1;
 		i++;
 	}
-	p->id = 0;
-	return (1);
+	return (0);
 }
 
 int				zero_it(t_boards *board, t_piece *p)
@@ -124,7 +126,7 @@ int				main(int argc, char **argv)
 
 	if (argc != 2)
 	{
-		write(1, "this is error", 11);
+		write(1, "usage: ./fillit input_file\n", 27);
 		return (1);
 	}
 	file = open(argv[1], O_RDONLY);
@@ -132,14 +134,12 @@ int				main(int argc, char **argv)
 	zero_it(board, p);
 	if (!reader(file, p))
 	{
-		write(1, "you did it wrong", 13);
+		write(1, "error\n", 6);
 		return (1);
 	}
 	board->final = get_final(p, board);
 	board->size = 3;
 	if (solver(p, board))
 		printer(p, board);
-	else
-		write(1, "sorry, no answer\n", 17);
 	return (0);
 }
